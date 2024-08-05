@@ -10,6 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
     "react": "18.2.0",
     "react-native": "0.74.3"
   },
@@ -33,4 +35,5 @@
   "engines": {
     "node": ">=18"
   }
+  
 }
