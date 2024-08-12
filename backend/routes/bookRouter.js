@@ -156,14 +156,25 @@ router.post('/createBook', async (req, res) => {
             if (err) return res.status(500).json({ error: 'Failed to create book' });
 
             // TTS 변환 및 저장 함수
-                try{
-                    const promises = paragraphs.map(async(paragraph, index) =>{
+            try{
+                const results = [];
+
+                for (let index = 0; index < paragraphs.length; index++) {
+                    const paragraph = paragraphs[index];
+                    try {
+                        console.log(`Processing paragraph ${index + 1} of ${paragraphs.length}`);
                         const audioUrl = await convertTextToSpeech(paragraph, title, index);
                         const imageUrl = await createImages(paragraph, title);
-                        return {paragraph, imageUrl, audioUrl, index};
-                    });
+                        results.push({ paragraph, imageUrl, audioUrl, index });
+                        
+                        // 각 요청 사이에 짧은 딜레이를 추가하여 API Rate Limit을 피할 수 있습니다.
+                        await new Promise(resolve => setTimeout(resolve, 10000)); // 10초 딜레이
+                    } catch (error) {
+                        console.error(`Error processing paragraph ${index + 1}:`, error);
+                        throw error;
+                    }
+                }
 
-                const results = await Promise.all(promises);
 
                 const sortedResults = results.sort((a,b) => a.index - b.index);
 
