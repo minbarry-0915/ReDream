@@ -16,6 +16,7 @@
     "@aws-sdk/lib-storage": "^3.626.0",
     "@aws-sdk/s3-request-presigner": "^3.626.0",
     "aws-sdk": "^2.1670.0",
+    "axios": "^1.7.3",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
