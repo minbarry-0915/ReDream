@@ -1,13 +1,15 @@
-import express from 'express';
-import createBook from '../models/bookModel.js'; // Default import
-import createParagraph from '../models/paragraphModel.js'; // Default import
-import { PollyClient, SynthesizeSpeechCommand } from '@aws-sdk/client-polly';
-import { S3Client } from '@aws-sdk/client-s3';
+import express from 'express'; //server
+import Book from '../models/bookModel.js'; // Default import
+import Paragraph from '../models/paragraphModel.js'; // Default import
+import { PollyClient, SynthesizeSpeechCommand } from '@aws-sdk/client-polly'; //tts
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage'; // 추가
-import dotenv from 'dotenv';
-import OpenAI from 'openai';
-import slugify from 'slugify';
-import axios from 'axios';
+import dotenv from 'dotenv'; //env파일
+import OpenAI from 'openai'; //gpt, dalle
+import slugify from 'slugify'; //파일명 변환용
+import axios from 'axios'; //server
+import url from 'url'; //url 추출용
+import { create } from 'domain';
 
 dotenv.config();
 
@@ -89,13 +91,39 @@ async function uploadS3(buffer, fileName, contentType){
     const location = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${fileName}`;
     return location;
 }
+const createCoverImage = async (title) => {
+    try{
+        const dalleResponse = await openai.images.generate({
+            model: "dall-e-3",
+            prompt: `please create a image for book cover, the title is ${title}.
+            **Important**: Do not include any text, speech bubbles, or captions in the image. `,
+            size: "1024x1792",  // 이미지 크기
+            quality: "standard",  // 이미지 품질
+            n: 1  // 생성할 이미지 수
+        });
 
+        const imagesUrl = dalleResponse.data[0].url;
+
+        //제목을 안전하게 변환
+        const sanitizedTitle = slugify(title, { lower: true, strict: true }); 
+        const fileName = `coverImage-${sanitizedTitle}-${Date.now()}.png`;
+
+        //S3 업로드
+        const imageBuffer = await downloadImage(imagesUrl);
+        const contentType = 'image/png';
+        const awsS3Url = await uploadS3(imageBuffer, fileName, contentType);
+        return awsS3Url;
+    }catch (error) {
+        console.error('Error creating images: ', error);
+        throw error;
+    }
+}
 const createImages = async (text, title) =>{
     try {
         const dalleResponse = await openai.images.generate({
             model: "dall-e-3",  // 모델 이름
             prompt: `
-            Please create a vertical image for a children's story in 2d webtoon style. 
+            Please create a image for a children's story in 2d animation style. 
             The scene is: ${text}. 
             **Important**: Do not include any text, speech bubbles, or captions in the image. 
             `,  // 이미지 프롬프트
@@ -122,8 +150,8 @@ const createImages = async (text, title) =>{
     }
 
 }
-// /createBook 엔드포인트 정의
-router.post('/createBook', async (req, res) => {
+//create 엔드포인트 정의
+router.post('/book/create', async (req, res) => {
     const { user_id, title, genre, keyword, description } = req.body;
 
     try {
@@ -149,10 +177,9 @@ router.post('/createBook', async (req, res) => {
         const paragraphs = storyText.split("\n\n");
         //console.log(paragraphs);
 
-        //const bookCoverImage = createImages(title, title)
+        const coverImage = await createCoverImage(title);
 
-        // Book 테이블에 데이터 삽입
-        createBook(user_id, title, genre, keyword, description, async (err, book_id) => {
+        Book.create(user_id, title, genre, keyword, description, coverImage, async (err, book_id) => {
             if (err) return res.status(500).json({ error: 'Failed to create book' });
 
             // TTS 변환 및 저장 함수
@@ -180,7 +207,7 @@ router.post('/createBook', async (req, res) => {
 
                 for(const result of sortedResults){
                     await new Promise((resolve, reject) =>{
-                        createParagraph(book_id, result.paragraph, result.imageUrl, result.audioUrl, (err) => {
+                        Paragraph.create(book_id, result.paragraph, result.imageUrl, result.audioUrl, (err) => {
                             if(err)
                                 reject(err);
                             else
@@ -197,41 +224,181 @@ router.post('/createBook', async (req, res) => {
                 res.status(500).json({ error: 'Failed to process some paragraphs', details: error });
             }
 
-            // const processParagraphs = async () => {
-            //     for (const paragraph of paragraphs) {
-            //         try {
-            //             const audioUrl = await convertTextToSpeech(paragraph, title);
-            //             // 비동기 작업 수행
-            //             await new Promise((resolve, reject) => {
-            //                 //db에 문단, 오디오파일 삽입
-            //                 createParagraph(book_id, paragraph, audioUrl, (err) => {
-            //                     if (err) {
-            //                         errors.push(err);
-            //                         reject(err);
-            //                     } else {
-            //                         resolve();
-            //                     }
-            //                 });
-            //             }); 
-            //         } catch (error) {
-            //             errors.push(error);
-            //         }
-            //     }
-
-            //     // 모든 문단 처리가 끝난 후 응답
-            //     if (errors.length) {
-            //         console.error(errors);
-            //         return res.status(500).json({ error: 'Failed to create some paragraphs' });
-            //     }
-            //     res.status(201).json({ message: 'Book and paragraphs created successfully' });
-            // };
-
-            // await processParagraphs();
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while creating the book' });
     }
 });
+
+//bookList 조회 엔드포인트 정의
+router.get('/book', async (req, res) => {
+    const { user_id } = req.query;
+
+    try{
+        const books = await new Promise((resolve, reject) =>{
+            Book.view(user_id, (err, booklist) => {
+                if(err){
+                    console.error('Database query error:', err); // 에러 로그
+                    reject(err);
+                }
+                else{
+                    console.log('Query result:', booklist); // 쿼리 결과 로그
+                    resolve(booklist);
+                }
+            });
+        });
+        res.status(200).json({books});
+    }
+    catch(error){
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch books', details: error});
+    }
+});
+
+async function extractFilePathFromUrl(fileUrl){
+    const parsedUrl = new URL(fileUrl);
+    //console.log(parsedUrl.pathname.substring(1));
+    // parsedUrl.pathname = /path/to/resource
+    // substring으로 / 제거
+    return parsedUrl.pathname.substring(1);
+}
+
+async function deleteFileFromS3(fileUrl){
+    try {
+        console.log(fileUrl);
+
+        const filePath = await extractFilePathFromUrl(fileUrl);
+
+        if (typeof filePath !== 'string') {
+            console.error('Invalid file path:', filePath);
+            throw new Error('Invalid file path provided for S3 deletion');
+        }
+
+
+        const command = new DeleteObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: filePath,
+        });
+
+        await s3.send(command);
+        console.log(`File ${filePath} deleted successfully from ${process.env.S3_BUCKET_NAME}`);
+    } catch(error){
+        if (error.name === 'NoSuchKey') {
+            // 파일이 이미 삭제된 경우
+            console.log(`File ${filePath} does not exist or already deleted`);
+        } else {
+            console.error(`Error deleting file ${filePath} from S3:`, error);
+            throw error;
+        }
+    }
+};
+
+//book 정보 조회 엔드포인트 정의
+//  /books/3/full
+router.get('/books/:book_id/full', async (req, res) => {
+    const { book_id } = req.params;
+    //console.log('book_id:', book_id);
+
+    if (!book_id) {
+        return res.status(400).json({ error: 'Missing book_id parameter' });
+    }
+    try {
+        // 책 정보를 조회
+        const bookPromise = new Promise((resolve, reject) => {
+            Book.getBookById(book_id, (err, books) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(books);
+            });
+        });
+
+        // 문단 정보를 조회
+        const paragraphPromise = new Promise((resolve, reject) => {
+            Paragraph.getParagraphById(book_id, (err, paragraphs) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(paragraphs);
+            });
+        });
+
+        const [book, paragraphs] = await Promise.all([bookPromise, paragraphPromise]);
+
+        //console.log('Book query result:', book);
+        //console.log('Paragraph query result:', paragraphs);
+
+        // 책 정보가 없는 경우
+        if (book.length === 0) {
+            return res.status(404).json({ error: 'Book not found' });
+        }
+
+        // 문단이 없는 경우
+        if (paragraphs.length === 0) {
+            return res.status(404).json({ book, error: 'No paragraphs found for the book' });
+        }
+
+        // 책과 문단 정보 모두 반환
+        res.status(200).json({ book, paragraphs });
+
+    } catch (error) {
+        console.error('Error fetching book and paragraphs:', error);
+        res.status(500).json({ error: 'Failed to fetch book and paragraphs', details: error });
+    }
+});
+
+//delete 엔드포인트 정의
+router.delete('/books', async (req, res) =>{
+    const {book_id} = req.query;
+
+    try{
+        //S3에 저장되어있는 관련 파일 경로 추출
+        const paths = await new Promise((resolve, reject) =>{
+            Paragraph.getParagraphPaths(book_id, (err, res) =>{
+                if(err){
+                    reject(err);
+                } else{
+                    resolve(res);
+                }
+            })
+        })
+        //해당 동화 관련 파일 삭제
+        const deletePromises = paths.map(async (path) => {
+            try {
+                await deleteFileFromS3(path.audio_path);
+            } catch (error) {
+                // 에러가 발생한 경우 처리
+                console.error(`Failed to delete audio file ${path.audio_path}:`, error);
+            }
+            if (path.image_path) {
+                try {
+                    await deleteFileFromS3(path.image_path);
+                } catch (error) {
+                    // 에러가 발생한 경우 처리
+                    console.error(`Failed to delete image file ${path.image_path}:`, error);
+                }
+            }
+        });
+
+        await Promise.all(deletePromises);
+        //DB에서 해당 레코드 삭제 
+        await new Promise((resolve, reject) =>{
+            Book.delete(book_id, (err) =>{
+                if(err){
+                    reject(err);
+                } else{
+                    resolve();
+                }
+            });
+        });
+
+        res.status(200).json({message: 'Book and related Paragraphs deleted successfully'});
+    }catch(error){
+        console.error('Error:', error);
+        res.status(500).json({error: 'Failed to delete book', details: error});
+    }
+})
+
 
 export default router;
