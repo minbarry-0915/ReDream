@@ -35,7 +35,18 @@ const User = {
                 }
             });
         });
-    } 
+    },
+
+    delete: (id, callback) => {
+        const query = 'DELETE FROM user WHERE id = ?';
+
+        connection.query(query, [id], (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results);
+        });
+    }
 };
 
 export default User; // ES 모듈에서 default export

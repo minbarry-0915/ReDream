@@ -232,7 +232,7 @@ router.post('/book/create', async (req, res) => {
 });
 
 //bookList 조회 엔드포인트 정의
-router.get('/book', async (req, res) => {
+router.get('/bookList', async (req, res) => {
     const { user_id } = req.query;
 
     try{
@@ -296,7 +296,7 @@ async function deleteFileFromS3(fileUrl){
 
 //book 정보 조회 엔드포인트 정의
 //  /books/3/full
-router.get('/books/:book_id/full', async (req, res) => {
+router.get('/book/:book_id/full', async (req, res) => {
     const { book_id } = req.params;
     //console.log('book_id:', book_id);
 
@@ -349,7 +349,7 @@ router.get('/books/:book_id/full', async (req, res) => {
 });
 
 //delete 엔드포인트 정의
-router.delete('/books', async (req, res) =>{
+router.delete('/book', async (req, res) =>{
     const {book_id} = req.query;
 
     try{

@@ -23,44 +23,65 @@ const Book = {
         });
     },
 
-    delete: async(book_id, callback) => {
+    delete: async (book_id, callback) => {
         try {
-            await new Promise((resolve, reject) =>{
-                //데이터 atomicity 보존을 위해 트랜잭션 설정
+            // 트랜잭션 시작
+            await new Promise((resolve, reject) => {
                 connection.beginTransaction((err) => {
-                    if(err) reject(err);
+                    if (err) reject(err);
                     else resolve();
                 });
             });
-
+    
+            // 책이 존재하는지 확인
+            const exists = await new Promise((resolve, reject) => {
+                const query = 'SELECT COUNT(*) AS count FROM book WHERE book_id = ?';
+                connection.query(query, [book_id], (err, results) => {
+                    if (err) return reject(err);
+                    resolve(results[0].count > 0);
+                });
+            });
+    
+            if (!exists) {
+                // 책이 존재하지 않으면 트랜잭션을 롤백하고 에러 반환
+                await new Promise((resolve, reject) => {
+                    connection.rollback(() => {
+                        reject(new Error('Book does not exist'));
+                    });
+                });
+                return;
+            }
+    
+            // `paragraph` 테이블에서 해당 `book_id` 삭제
             await new Promise((resolve, reject) => {
                 const query = 'DELETE FROM paragraph WHERE book_id = ?';
-                connection.query(query, [book_id],(err) =>{
-                    if (err){
-                        connection.rollback(()=>{
+                connection.query(query, [book_id], (err) => {
+                    if (err) {
+                        connection.rollback(() => {
                             reject(err);
                         });
-                    } else{
+                    } else {
                         resolve();
                     }
                 });
             });
-
-            await new Promise((resolve, reject) =>{
+    
+            // `book` 테이블에서 해당 `book_id` 삭제
+            await new Promise((resolve, reject) => {
                 const query = 'DELETE FROM book WHERE book_id = ?';
                 connection.query(query, [book_id], (err) => {
-                    if (err){
-                        connection.rollback(()=>{
+                    if (err) {
+                        connection.rollback(() => {
                             reject(err);
                         });
-                    }else{
+                    } else {
                         resolve();
                     }
-                })
-            })
-
+                });
+            });
+    
+            // 트랜잭션 커밋
             await new Promise((resolve, reject) => {
-                // 커밋 트랜잭션
                 connection.commit((err) => {
                     if (err) {
                         connection.rollback(() => {
@@ -72,15 +93,15 @@ const Book = {
                 });
             });
     
-            // 콜백 함수 호출 성공시
+            // 성공 시 콜백 호출
             callback(null);
-
-
-        }catch(error){
+    
+        } catch (error) {
             console.error('Transaction error while deleting book', error);
             callback(error);
         }
     },
+    
   
     getBookById: (book_id, callback) => {
         const query = `SELECT * FROM book WHERE book_id = ?`;
