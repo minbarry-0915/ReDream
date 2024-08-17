@@ -11,15 +11,21 @@ function LoginScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
 
     const onLoginButton = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/api/user/login', {
-                id: 'jimin9809152',
-                password: 'Dlwlals147@'
+            const response = await axios.post('http://192.168.0.2:3000/api/user/login', {
+                id: id,
+                password: pw
             }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('Login success:', response.data);
+            if (response.status === 200) { // 성공적인 응답 코드 확인
+                console.log(response.data);
+                navigation.navigate("Home"); // 로그인 성공 시 홈 화면으로 네비게이션
+            } else {
+                console.error('Login failed: ', response.statusText);
+                // 로그인 실패 처리 로직 (예: 사용자에게 실패 메시지 표시)
+            }
         } catch (error) {
             console.error('Login failed:', error);
         }
