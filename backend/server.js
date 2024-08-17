@@ -6,9 +6,13 @@ import userRouter from './routes/userRouter.js'; // .js 확장자 명시
 import bookRouter from './routes/bookRouter.js'; // .js 확장자 명시
 import genreRouter from './routes/genreRouter.js';
 import keywordRouter from './routes/keywordRouter.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 
 const app = express();
-const port = 3000;
+const port = process.env.BACKEND_PORT;
 
 app.use(express.json());
 app.use(cors());
