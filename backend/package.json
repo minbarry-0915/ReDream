@@ -26,5 +26,8 @@
     "slugify": "^1.6.6",
     "uuid": "^10.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@react-native/typescript-config": "^0.75.1"
+  }
 }
