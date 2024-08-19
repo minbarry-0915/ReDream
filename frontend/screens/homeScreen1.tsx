@@ -15,7 +15,6 @@ function HomeScreen1(){
                     </Text>
                 </TextInput>
             </View>
-            
         </KeyboardAvoidingView>
     )
     

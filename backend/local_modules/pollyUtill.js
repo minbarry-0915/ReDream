@@ -15,6 +15,7 @@ const polly = new PollyClient({
 
 export async function convertTextToSpeech(text, title, index) {
     try {
+        console.log('Coverting Text to Speech ', index);
         const params = {
             Text: text,
             OutputFormat: 'mp3',

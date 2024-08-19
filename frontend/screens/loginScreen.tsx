@@ -9,6 +9,8 @@ function LoginScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
     const [id, setId] = useState("");
     const [pw, setPw] = useState("");
 
+    const [isInvalid, setIsInvalid] = useState<boolean>(false);
+
     const onLoginButton = async () => {
         try {
             const response = await axios.post('http://192.168.0.2:3000/api/user/login', {
@@ -17,18 +19,27 @@ function LoginScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
             }, {
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                validateStatus: (status) => status < 500 // 500 이상 상태 코드만 오류로 처리
             });
             if (response.status === 200) { // 성공적인 응답 코드 확인
                 console.log(response.data);
                 navigation.navigate("Home"); // 로그인 성공 시 홈 화면으로 네비게이션
-            } else {
-                console.error('Login failed: ', response.statusText);
+            } else if(response.status === 401){
                 // 로그인 실패 처리 로직 (예: 사용자에게 실패 메시지 표시)
+                setIsInvalid(true);
+                focusTextInput();
+            } else {
+                throw new Error('Unexpected response status');
             }
         } catch (error) {
             console.error('Login failed:', error);
         }
+    };
+
+    const focusTextInput = () => {
+        setId("");
+        setPw("");
     };
 
     const onSignUPButton = () => {
@@ -44,11 +55,15 @@ function LoginScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
     };
 
     useEffect(()=>{
+
+    },[])
+
+    useEffect(()=>{
         console.log(`id: ${id} pw: ${pw}`);
     },[id, pw]);
 
     return(
-        <KeyboardAvoidingView style={loginStyles.container}>
+        <KeyboardAvoidingView style={[GlobalStyles.container,{justifyContent: 'center'}]}>
             
             {/* 로고 */}
             <View style={loginStyles.logoContainer}>
@@ -61,6 +76,7 @@ function LoginScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
                 placeholder="ID"
                 placeholderTextColor={'white'}
                 onChangeText={setId}
+                value={id}
                 style={loginStyles.inputContent}/>
             </View>
 
@@ -70,9 +86,17 @@ function LoginScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
                 placeholder="PW"
                 placeholderTextColor={'white'}
                 onChangeText={setPw}
+                value={pw}
                 style={loginStyles.inputContent}/>
             </View>
-            
+
+            {/* 오류 메시지 */}
+            {isInvalid && (
+                <View style={loginStyles.loginErrorContainer}>
+                    <Text style={[GlobalStyles.regularText,{color: '#E93B3B'}]}>잘못된 아이디이거나 비밀번호입니다.</Text>
+                </View>
+            )}
+
             {/* 로그인 버튼 */}
             <View style={loginStyles.inputContainer}>
                 <TouchableOpacity 

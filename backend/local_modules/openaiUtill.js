@@ -31,15 +31,24 @@ export async function regenerateText(text) {
             max_tokens: 1000
         });
 
-        return gptResponse.data.choices[0].message.content.trim();
+        // 응답 데이터 로깅
+        console.log("API 응답:", gptResponse);
+
+        // 응답 구조 확인 및 처리
+        if (gptResponse && gptResponse.data && gptResponse.data.choices && gptResponse.data.choices.length > 0) {
+            return gptResponse.data.choices[0].message.content.trim();
+        } else {
+            throw new Error("API 응답이 예상과 다릅니다. choices 배열이 비어있거나 존재하지 않습니다.");
+        }
     } catch (error) {
-        console.error('Error regenerating text:', error);
+        console.error('Error regenerating text:', error.message || error);
         throw error;
     }
 }
 
 export async function createCoverImage(title) {
     try {
+        console.log('Creating Cover Image...');
         const dalleResponse = await openai.images.generate({
             model: "dall-e-3",
             prompt: `please create a image for book cover, the title is ${title}. **Important**: Do not include any text, speech bubbles, or captions in the image.`,
@@ -63,7 +72,9 @@ export async function createCoverImage(title) {
 
 export async function createImages(text, title) {
     try {
+        console.log('Creating Paragraph Image...');
         if (containsBannedKeywords(text)) {
+            console.log('Banned keyword detected, Regenerate the paragraph...');
             text = await regenerateText(text);
         }
 

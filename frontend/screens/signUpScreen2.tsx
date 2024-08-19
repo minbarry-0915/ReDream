@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import SignUpStyles from "../styles/signUpScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -8,14 +8,14 @@ import { useSignUp } from "../contexts/signUpContext";
 import TopNavigator from "../components/topNavigator";
 
 
-function SignUpScreen1({navigation}:{navigation: NavigationProp<ParamListBase>}){
+function SignUpScreen2({navigation}:{navigation: NavigationProp<ParamListBase>}){
     const {userData, setUserData} = useSignUp();
-    const [nameInput, setNameInput] = useState<string>(userData.name);
+    const [idInput, setIdInput] = useState<string>(userData.id);
 
     const onNextButton = () =>{
-        //console.log('signup1: ', nameInput);
-        setUserData(prevData => ({...prevData, name: nameInput}))
-        navigation.navigate("SignUp2");
+        //console.log('SignUp2: ',userData);
+        setUserData(prevData => ({...prevData, id: idInput}));
+        navigation.navigate("SignUp3");
     };
 
     return(
@@ -30,17 +30,18 @@ function SignUpScreen1({navigation}:{navigation: NavigationProp<ParamListBase>})
             keyboardShouldPersistTaps="handled">
                 <TopNavigator navigation={navigation} title="회원가입"/>
 
+
                 <View style={GlobalStyles.content}>
                     <Text style={[GlobalStyles.semiBoldText, {fontSize: 22}]}>
-                        이름을 입력해주세요
+                        아이디를 입력해주세요
                     </Text>
                 </View>
 
                 <View style={GlobalStyles.content}>
                     <TextInput
                     placeholderTextColor={"black"}
-                    onChangeText={setNameInput}
-                    value={nameInput}
+                    onChangeText={setIdInput}
+                    value={idInput}
                     style={SignUpStyles.inputContainer}
                     defaultValue=""
                     />
@@ -68,4 +69,4 @@ function SignUpScreen1({navigation}:{navigation: NavigationProp<ParamListBase>})
     
 }
 
-export default SignUpScreen1;
+export default SignUpScreen2;

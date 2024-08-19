@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import SignUpStyles from "../styles/signUpScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
+
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import loginStyles from "../styles/loginScreenStyle";
 import { useSignUp } from "../contexts/signUpContext";
+
+import EyeIcon from "../assets/icons/eye.svg";
 import TopNavigator from "../components/topNavigator";
 
-
-function SignUpScreen1({navigation}:{navigation: NavigationProp<ParamListBase>}){
+function SignUpScreen3({navigation}:{navigation: NavigationProp<ParamListBase>}){
     const {userData, setUserData} = useSignUp();
-    const [nameInput, setNameInput] = useState<string>(userData.name);
+    const [pwInput, setPwInput] = useState<string>(userData.password);
+    const [pwVisible, setPwVisible] = useState<boolean>(true);
 
     const onNextButton = () =>{
-        //console.log('signup1: ', nameInput);
-        setUserData(prevData => ({...prevData, name: nameInput}))
-        navigation.navigate("SignUp2");
+        //console.log('SignUp: ',userData);
+        setUserData(prevData => ({...prevData, password: pwInput}));
+        navigation.navigate("SignUp4");
     };
+
+    const togglePwVisible = () =>{
+        setPwVisible(!pwVisible);
+    }
+
+    useEffect(()=>{
+        console.log(userData);
+    },[])
 
     return(
         <KeyboardAvoidingView 
@@ -32,18 +43,25 @@ function SignUpScreen1({navigation}:{navigation: NavigationProp<ParamListBase>})
 
                 <View style={GlobalStyles.content}>
                     <Text style={[GlobalStyles.semiBoldText, {fontSize: 22}]}>
-                        이름을 입력해주세요
+                        비밀번호를 입력해주세요
                     </Text>
                 </View>
 
-                <View style={GlobalStyles.content}>
+                <View style={[GlobalStyles.content,{flexDirection: 'row'}]}>
                     <TextInput
+                    secureTextEntry={pwVisible} //입력한 문자를 가려줌
                     placeholderTextColor={"black"}
-                    onChangeText={setNameInput}
-                    value={nameInput}
+                    onChangeText={setPwInput}
+                    value={pwInput}
                     style={SignUpStyles.inputContainer}
                     defaultValue=""
                     />
+                    <TouchableOpacity 
+                    onPressIn={togglePwVisible}
+                    onPressOut={togglePwVisible}
+                    style={[GlobalStyles.iconContainer]}>
+                        <EyeIcon width={24} height={24}/>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={
@@ -68,4 +86,4 @@ function SignUpScreen1({navigation}:{navigation: NavigationProp<ParamListBase>})
     
 }
 
-export default SignUpScreen1;
+export default SignUpScreen3;

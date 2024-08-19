@@ -3,11 +3,16 @@ import { StyleSheet } from "react-native";
 const loginStyles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
     },
     logoContainer:{
+        width: '100%',
+        paddingHorizontal: 48,
+        justifyContent: 'center',
+        alignItems: 'center',
         marginBottom: 132,
     },
     inputContainer: {
@@ -39,6 +44,14 @@ const loginStyles = StyleSheet.create({
         paddingVertical: 10,
         backgroundColor:'#3253FF',
         elevation: 10,
+    },
+    loginErrorContainer:{
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        paddingHorizontal: 60,
+        marginBottom: 12,
+        //borderWidth: 2,
     },
     optionContainer:{
         flexDirection:'row',
