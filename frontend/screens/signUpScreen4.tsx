@@ -16,29 +16,33 @@ function SignUpScreen4({navigation}:{navigation: NavigationProp<ParamListBase>})
     const {userData, setUserData} = useSignUp();
     const [birthDateInput, setBirthDateInput] = useState<string>(userData.birthDate);
 
-    const onRegisterButton = async() =>{
-        setUserData(prevData => ({...prevData, birthDate: birthDateInput}));
-        console.log('SignUp: ',userData);
-        await handleRegister();
-        navigation.navigate("Login");
+    const onRegisterButton = async() => {
+        console.log('SignUp: ', userData);
+        setUserData(prevData => {
+            const updatedUserData = { ...prevData, birthDate: birthDateInput };
+            handleRegister(updatedUserData);  // 업데이트된 데이터를 인자로 전달
+            return updatedUserData;
+        });
     };
 
-    const handleRegister = async() =>{
+    const handleRegister = async(updatedUserData) =>{
         try{
             const response = await axios.post('http://192.168.0.2:3000/api/user/register', {
-                    "id": userData.id,
-                    "username": userData.name,
-                    "password": userData.password,
-                    "birthdate": userData.birthDate,
+                    "id": updatedUserData.id,
+                    "username": updatedUserData.name,
+                    "password": updatedUserData.password,
+                    "birthdate": updatedUserData.birthDate,
             },{
                 headers:{
                     'Content-Type': 'application/json'
                 },
                 validateStatus: (status) => status < 500 
             });
-            if(response.status === 200){
+
+            console.log(response);
+            if(response.status === 201){
                 console.log(response.data);
-                navigation.navigate('Login');
+                navigation.navigate('SignUp5');
             }else if(response.status == 400){
                 //이미 있는 아이디일때
                 console.log('ID already exists');
@@ -55,10 +59,12 @@ function SignUpScreen4({navigation}:{navigation: NavigationProp<ParamListBase>})
     const endYear = currentYear;
 
     const isValidDate = (year, month, day) => {
-        const date = new Date(year, month - 1, day); // 월은 0부터 시작
-        return date.getFullYear() === parseInt(year) &&
-               date.getMonth() === month - 1 &&
-               date.getDate() === parseInt(day);
+        const date = new Date(year, month - 1, day); // month는 0부터 시작하므로 -1 필요
+        return (
+            date.getFullYear() === parseInt(year) &&
+            date.getMonth() === month - 1 && // Date 객체의 month는 0부터 시작
+            date.getDate() === parseInt(day)
+        );
     };
 
     const years = Array.from({ length: endYear - startYear + 1 }, (_, i) => (startYear + i).toString());
@@ -76,15 +82,18 @@ function SignUpScreen4({navigation}:{navigation: NavigationProp<ParamListBase>})
     },[])
 
     useEffect(() => {
+        // 세 값이 모두 존재하고 유효한지 확인
         if (selectedYear && selectedMonth && selectedDay) {
-          if (isValidDate(selectedYear, parseInt(selectedMonth), parseInt(selectedDay))) {
-            setBirthDateInput(`${selectedYear}-${selectedMonth.padStart(2, '0')}-${selectedDay.padStart(2, '0')}`);
-          } else {
-            // 날짜가 유효하지 않으면 빈 문자열로 설정하거나 다른 방법으로 처리할 수 있습니다.
-            setBirthDateInput('');
-          }
+            // 날짜 값이 유효한지 검사
+            if (isValidDate(selectedYear, parseInt(selectedMonth), parseInt(selectedDay))) {
+                console.log("ValidDate");
+                setBirthDateInput(`${selectedYear}-${selectedMonth.padStart(2, '0')}-${selectedDay.padStart(2, '0')}`);
+            } else {
+                console.log("invalidDate");
+                setBirthDateInput(''); // 유효하지 않은 경우 빈 문자열로 설정
+            }
         }
-      }, [selectedYear, selectedMonth, selectedDay]);
+    }, [selectedYear, selectedMonth, selectedDay]);
 
     return(
         <KeyboardAvoidingView 
@@ -163,7 +172,7 @@ function SignUpScreen4({navigation}:{navigation: NavigationProp<ParamListBase>})
                         data={days}
                         onSelect={(selectedItem, index) => {
                         console.log('Selected Day:', selectedItem, 'Index:', index);
-                        setSelectedMonth(selectedItem);
+                        setSelectedDay(selectedItem);
                         }}
                         defaultValue={selectedDay}
                         renderButton={(selectedItem, isDropdownOpened) => (

@@ -1,8 +1,10 @@
 import { StyleSheet } from "react-native";
+import BottomNaviatorContainer from "../components/bottomNavigator";
 
 const GlobalStyles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
         backgroundColor: 'white',   
     },
     content:{
@@ -61,8 +63,26 @@ const GlobalStyles = StyleSheet.create({
         paddingBottom: 24,
         paddingTop: 60,
         marginBottom: 22,
-    }
-    
+    },
+    bottomNavigatorContainer:{
+        width: '100%',
+        justifyContent: 'center',
+        alignItems:'center',
+        backgroundColor: "white",
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+        flexDirection: 'row',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        elevation: 10,
+    },
+    bottomNavigatorContent:{
+        justifyContent: 'center',
+        alignItems:'center',
+        width: 60,
+        height: 60,
+        marginRight: 32,
+    },
 })
 
 export default GlobalStyles;

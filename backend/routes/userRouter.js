@@ -2,7 +2,12 @@ import express from 'express';
 import User from '../models/userModel.js'; // .js 확장자 명시
 import Book from '../models/bookModel.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';  // JWT 라이브러리 사용
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+const secretKey = process.env.JWT_SECRET_KEY;
 const router = express.Router();
 
 router.post('/user/register', (req, res) => {
@@ -39,7 +44,6 @@ router.post('/user/login', (req, res) => {
     }
 
     User.login(id, password, (error, user, info) => {
-        // 성공하면 user를 돌려줌
         if (error) {
             return res.status(500).send('Error logging in');
         }
@@ -47,8 +51,22 @@ router.post('/user/login', (req, res) => {
             return res.status(401).send(info.message);
         }
 
-        // 로그인 성공
-        res.status(200).send('Login successful');
+        // 로그인 성공 -> JWT 토큰 생성
+        const token = jwt.sign(
+            { userId: user.id, username: user.username },  // 토큰에 포함할 정보 (userId, username 등)
+            secretKey,  // 비밀키
+            { expiresIn: '1h' }  // 토큰 만료 시간 설정
+        );
+
+        // 사용자 정보와 토큰을 JSON으로 응답
+        res.status(200).json({
+            user: {
+                id: user.id,
+                username: user.username,
+                // 다른 사용자 정보가 필요하면 추가 가능
+            },
+            token,  // 클라이언트가 사용할 토큰
+        });
     });
 });
 

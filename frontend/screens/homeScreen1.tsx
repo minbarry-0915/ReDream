@@ -1,23 +1,68 @@
-import React from "react";
-import { KeyboardAvoidingView, Text, TextInput, View } from "react-native";
-import loginStyles from "../styles/loginScreenStyle";
+import React, { useEffect, useState } from "react";
+import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store'; // RootState를 가져옵니다.
+import BookListContent from "../components/bookListContent";
+import HomeScreenStyles from "../styles/homeScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
-function HomeScreen1(){
-    return(
-        <KeyboardAvoidingView style={loginStyles.container}>
-            <View style={loginStyles.logoContainer}>
-                <Text style={GlobalStyles.logoText}>Re-DREAM</Text>
-            </View>
-            <View>
-                <TextInput>
-                    <Text>
-                        this is homeScreen1
-                    </Text>
-                </TextInput>
-            </View>
+import loginStyles from "../styles/loginScreenStyle";
+import PlusIcon from "../assets/icons/plus.svg";
+import BottomNaviatorContainer from "../components/bottomNavigator";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import useFetchBookList from '../function/useFetchBookList';
+
+function HomeScreen1({navigation}:{navigation: NavigationProp<ParamListBase>}) {
+    const booklist = useFetchBookList(); // Custom hook 사용
+
+    const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux state에서 user ID 가져오기
+
+    return (
+        <KeyboardAvoidingView style={[GlobalStyles.container, { justifyContent: "flex-start", alignItems: 'center', backgroundColor: '#F0F0F0' }]}>
+            <ScrollView
+            showsVerticalScrollIndicator={false}
+            >
+                {/* 대시보드 */}
+                <View style={GlobalStyles.topNavigatorContainer}>
+                    <Text style={[GlobalStyles.BoldText, { fontSize: 32 }]}>대시보드</Text>
+                </View>
+
+                {/* 생성하기 버튼 */}
+                <View style={HomeScreenStyles.content}>
+                    <Text style={[GlobalStyles.semiBoldText, { fontSize: 18, marginBottom: 24 }]}>새로운 동화를 생성해보세요</Text>
+                    <View style={[loginStyles.inputContainer, { paddingHorizontal: 0 }]}>
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            style={[loginStyles.loginButton, { borderRadius: 20, paddingVertical: 24 }]}
+                        >
+                            <View style={{ marginBottom: 4 }}>
+                                <PlusIcon width={20} height={20} />
+                            </View>
+                            <Text style={[GlobalStyles.semiBoldText, { fontSize: 16, color: 'white' }]}>
+                                생성하기
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                {/* 책 리스트 */}
+                <View style={HomeScreenStyles.content}>
+                    <Text style={[GlobalStyles.semiBoldText, { fontSize: 18, marginBottom: 24 }]}>저장된 동화 목록</Text>
+                    <View style={HomeScreenStyles.bookListContainer}>
+                        {booklist.map((book) => (
+                            <BookListContent
+                                key={book.bookId}
+                                title={book.title}
+                                genre={book.genre}
+                                createAt={book.createAt}
+                                bookCoverUri={book.bookCoverUri}
+                            />
+                        ))}
+                    </View>
+                </View>
+            </ScrollView>
+            {/* <BottomNaviatorContainer navigation={navigation}/> */}
         </KeyboardAvoidingView>
-    )
-    
+    );
 }
 
 export default HomeScreen1;
