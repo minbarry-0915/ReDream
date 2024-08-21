@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+
 import SignUpStyles from "../styles/signUpScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
-
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import loginStyles from "../styles/loginScreenStyle";
+
 import { useSignUp } from "../contexts/signUpContext";
+import TopNavigator from "../components/topNavigator";
 
 import EyeIcon from "../assets/icons/eye.svg";
-import TopNavigator from "../components/topNavigator";
 
 function SignUpScreen3({navigation}:{navigation: NavigationProp<ParamListBase>}){
     const {userData, setUserData} = useSignUp();

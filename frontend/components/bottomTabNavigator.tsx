@@ -1,8 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen1 from "../screens/homeScreen1";
+
+import HomeScreen from "../screens/homeScreen";
 import BookMarkScreen from "../screens/bookMarkScreen.tsx";
 import MyPageScreen from "../screens/myPageScreen.tsx";
+
 import HomeIcon from "../assets/icons/home.svg";
 import HomeFocusIcon from "../assets/icons/homeFocus.svg";
 import BookMarkIcon from "../assets/icons/bookmark.svg";
@@ -44,7 +46,7 @@ function BottomTabNavigator() {
       })}
     >
         <Tab.Screen name="BookMark" component={BookMarkScreen} options={{ tabBarLabel: '북마크' }} />
-        <Tab.Screen name="Home" component={HomeScreen1} options={{ tabBarLabel: '홈' }} />
+        <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: '홈' }} />
         
         <Tab.Screen name="MyPage" component={MyPageScreen} options={{ tabBarLabel: '마이페이지' }} />
     </Tab.Navigator>

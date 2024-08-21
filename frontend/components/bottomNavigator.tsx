@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, Text } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+
 import GlobalStyles from "../styles/globalStyle";
 import HomeIcon from "../assets/icons/home.svg";
 import BookMarkIcon from "../assets/icons/bookmark.svg";

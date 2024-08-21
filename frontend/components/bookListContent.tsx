@@ -1,9 +1,9 @@
 import React from "react";
-import PlayIcon from "../assets/icons/play.svg";
-import HomeScreenStyles from "../styles/homeScreenStyle";
 import { View, Text, Image } from "react-native";
-import GlobalStyles from "../styles/globalStyle";
 
+import HomeScreenStyles from "../styles/homeScreenStyle";
+import GlobalStyles from "../styles/globalStyle";
+import PlayIcon from "../assets/icons/play.svg";
 // Props 타입 정의
 interface BookListContentProps {
   title: string;

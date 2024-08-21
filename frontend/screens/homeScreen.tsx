@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store'; // RootState를 가져옵니다.
-import BookListContent from "../components/bookListContent";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+// styles
 import HomeScreenStyles from "../styles/homeScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
 import loginStyles from "../styles/loginScreenStyle";
+// Icons
 import PlusIcon from "../assets/icons/plus.svg";
-import BottomNaviatorContainer from "../components/bottomNavigator";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
+// Components Functions
+import BookListContent from "../components/bookListContent";
 import useFetchBookList from '../function/useFetchBookList';
 
-function HomeScreen1({navigation}:{navigation: NavigationProp<ParamListBase>}) {
+function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
     const booklist = useFetchBookList(); // Custom hook 사용
 
     const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux state에서 user ID 가져오기
@@ -60,9 +62,8 @@ function HomeScreen1({navigation}:{navigation: NavigationProp<ParamListBase>}) {
                     </View>
                 </View>
             </ScrollView>
-            {/* <BottomNaviatorContainer navigation={navigation}/> */}
         </KeyboardAvoidingView>
     );
 }
 
-export default HomeScreen1;
+export default HomeScreen;

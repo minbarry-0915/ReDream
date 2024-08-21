@@ -1,12 +1,12 @@
 import React from "react";
 import { KeyboardAvoidingView, ScrollView, View, Text, TouchableOpacity } from "react-native";
-import GlobalStyles from "../styles/globalStyle";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import BottomNaviatorContainer from "../components/bottomNavigator";
-
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+
+import GlobalStyles from "../styles/globalStyle";
 import HomeScreenStyles from "../styles/homeScreenStyle";
+
 import useFetchBookList from "../function/useFetchBookList";
 import BookListContent from "../components/bookListContent";
 
@@ -58,7 +58,6 @@ function BookMarkScreen({navigation}: {navigation: NavigationProp<ParamListBase>
                 </View>
                 
             </ScrollView>
-            {/* <BottomNaviatorContainer navigation={navigation}/> */}
         </KeyboardAvoidingView>
     );
 }

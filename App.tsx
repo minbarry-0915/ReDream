@@ -4,9 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Provider } from "react-redux";
 import {store} from "./frontend/redux/store.ts";
 
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import LoginScreen from "./frontend/screens/loginScreen";
-import HomeScreen1 from "./frontend/screens/homeScreen1";
 
 import { SignUpProvider } from "./frontend/contexts/signUpContext";
 import SignUpScreen1 from "./frontend/screens/signUpScreen1";

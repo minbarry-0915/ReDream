@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import axios from "axios";
+import SelectDropdown from "react-native-select-dropdown";
+
 import SignUpStyles from "../styles/signUpScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
-import TopNavigator from "../components/topNavigator";
-import SelectDropdown from "react-native-select-dropdown";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import loginStyles from "../styles/loginScreenStyle";
-import { useSignUp } from "../contexts/signUpContext";
 
-import EyeIcon from "../assets/icons/eye.svg";
+import { useSignUp } from "../contexts/signUpContext";
+import TopNavigator from "../components/topNavigator";
 import DropIcon from "../assets/icons/drop.svg";
-import axios from "axios";
+
+
 
 function SignUpScreen4({navigation}:{navigation: NavigationProp<ParamListBase>}){
     const {userData, setUserData} = useSignUp();
