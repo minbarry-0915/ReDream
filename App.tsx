@@ -13,11 +13,15 @@ import SignUpScreen3 from "./frontend/screens/signUpScreen3";
 import SignUpScreen4 from "./frontend/screens/signUpScreen4";
 import SignUpScreen5 from "./frontend/screens/signUpScreen5";
 import BottomTabNavigator from "./frontend/components/bottomTabNavigator.tsx";
+import { CreateBookProvider } from "./frontend/contexts/createBookContext.tsx";
+import CreateBookScreen1 from "./frontend/screens/createBookScreen1.tsx";
+import CreateBookScreen2 from "./frontend/screens/createBookScreen2.tsx";
 
 
 
 const RootStack = createNativeStackNavigator();
 const SignUpStack = createNativeStackNavigator();
+const CreateBookStack = createNativeStackNavigator();
 
 function SignUpStackScreen(){
   return (
@@ -33,6 +37,17 @@ function SignUpStackScreen(){
   )
 }
 
+function CreateBookStackScreen(){
+  return (
+    <CreateBookProvider>
+      <CreateBookStack.Navigator>
+        <CreateBookStack.Screen name="CreateBook1" component={CreateBookScreen1} options={{headerShown: false}}/>
+        <CreateBookStack.Screen name="CreateBook2" component={CreateBookScreen2} options={{headerShown: false}}/>
+      </CreateBookStack.Navigator>
+    </CreateBookProvider>
+  )
+}
+
 function App() {
   return (
     <Provider store={store}>
@@ -41,6 +56,7 @@ function App() {
           <RootStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="SignUp" component={SignUpStackScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false , animation: 'fade'}} />
+          <RootStack.Screen name="CreateBook" component={CreateBookStackScreen} options={{headerShown: false}}/>
         </RootStack.Navigator>
       </NavigationContainer>
     </Provider>

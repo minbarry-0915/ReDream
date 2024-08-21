@@ -30,6 +30,7 @@ const getTabBarIcon = (routeName, focused) => {
 function BottomTabNavigator() {
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
         tabBarStyle: {
             height: 64,

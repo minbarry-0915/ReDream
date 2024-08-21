@@ -15,13 +15,17 @@ import useFetchBookList from '../function/useFetchBookList';
 
 function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
     const booklist = useFetchBookList(); // Custom hook 사용
-
     const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux state에서 user ID 가져오기
+
+    const onCreateButton = () => {
+        navigation.navigate("CreateBook");
+    }
 
     return (
         <KeyboardAvoidingView style={[GlobalStyles.container, { justifyContent: "flex-start", alignItems: 'center', backgroundColor: '#F0F0F0' }]}>
             <ScrollView
             showsVerticalScrollIndicator={false}
+            style={{flexGrow: 1, width: "100%"}}
             >
                 {/* 대시보드 */}
                 <View style={GlobalStyles.topNavigatorContainer}>
@@ -33,6 +37,7 @@ function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
                     <Text style={[GlobalStyles.semiBoldText, { fontSize: 18, marginBottom: 24 }]}>새로운 동화를 생성해보세요</Text>
                     <View style={[loginStyles.inputContainer, { paddingHorizontal: 0 }]}>
                         <TouchableOpacity
+                            onPress={onCreateButton}
                             activeOpacity={0.7}
                             style={[loginStyles.loginButton, { borderRadius: 20, paddingVertical: 24 }]}
                         >
@@ -57,6 +62,7 @@ function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
                                 genre={book.genre}
                                 createAt={book.createAt}
                                 bookCoverUri={book.bookCoverUri}
+                                navigation={navigation}
                             />
                         ))}
                     </View>

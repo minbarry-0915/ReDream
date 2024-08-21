@@ -13,6 +13,7 @@ function MyPageScreen({navigation}: {navigation: NavigationProp<ParamListBase>})
         <KeyboardAvoidingView style={[GlobalStyles.container, { justifyContent: "flex-start", alignItems: 'center', backgroundColor: '#F0F0F0' }]}>
             <ScrollView
             showsVerticalScrollIndicator={false}
+            style={{flexGrow: 1, width: "100%"}}
             >
                 {/* 마이페이지 */}
                 <View style={GlobalStyles.topNavigatorContainer}>

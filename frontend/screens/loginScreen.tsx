@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { KeyboardAvoidingView, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
-import loginStyles from "../styles/loginScreenStyle";
-import GlobalStyles from "../styles/globalStyle";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+
 import useLogin from "../function/useLogin";
 
+import loginStyles from "../styles/loginScreenStyle";
+import GlobalStyles from "../styles/globalStyle";
 function LoginScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
     const [id, setId] = useState("");
     const [pw, setPw] = useState("");

@@ -1,9 +1,9 @@
 import React from "react";
 import { TouchableOpacity, View, Text } from "react-native";
-import GlobalStyles from "../styles/globalStyle";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import BackIcon from "../assets/icons/back.svg";
 
+import BackIcon from "../assets/icons/back.svg";
+import GlobalStyles from "../styles/globalStyle";
 interface Prop {
     navigation: NavigationProp<ParamListBase>;
     title: string;

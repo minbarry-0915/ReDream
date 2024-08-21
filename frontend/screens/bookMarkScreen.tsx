@@ -24,6 +24,7 @@ function BookMarkScreen({navigation}: {navigation: NavigationProp<ParamListBase>
         <KeyboardAvoidingView style={[GlobalStyles.container, { justifyContent: "flex-start", alignItems: 'center', backgroundColor: '#F0F0F0' }]}>
             <ScrollView
             showsVerticalScrollIndicator={false}
+            style={{flexGrow: 1, width: "100%"}}
             >
                 {/* 북마크 */}
                 <View style={GlobalStyles.topNavigatorContainer}>
@@ -52,11 +53,11 @@ function BookMarkScreen({navigation}: {navigation: NavigationProp<ParamListBase>
                                 genre={book.genre}
                                 createAt={book.createAt}
                                 bookCoverUri={book.bookCoverUri}
+                                navigation={navigation}
                             />
                         ))}
                     </View>
                 </View>
-                
             </ScrollView>
         </KeyboardAvoidingView>
     );
