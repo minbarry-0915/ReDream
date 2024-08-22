@@ -23,21 +23,25 @@ function CreateBookScreen1({navigation}: {navigation: NavigationProp<ParamListBa
     const [genreInput, setGenreInput] = useState<Genre[]>([]);
     const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null); // 선택된 장르 상태
     const { bookData, setBookData } = useCreateBook();
+    const [errorMessege, setErrorMessege] = useState(false);
 
     const onNextButton = () => {
-        setBookData(prevData => ({
-            ...prevData,
-            genre: selectedGenre ? selectedGenre.genre_name : '' // genre_id를 설정
-        }));
-        console.log(bookData);
-        navigation.navigate("CreateBook2", {
-            genreId: selectedGenre ? selectedGenre.genre_id : 1 // genre_id를 파라미터로 넘기기
-        });
+        if(errorMessege !== true && selectedGenre !== null){
+            setBookData(prevData => ({
+                ...prevData,
+                genre: selectedGenre.genre_name // genre_id를 설정
+            }));
+            console.log(bookData);
+            navigation.navigate("CreateBook2", {
+                genreId: selectedGenre.genre_id // genre_id를 파라미터로 넘기기
+            });
+        }
+        
     };
 
     const getGenre = async () => {
         try {
-            const response = await axios.get("http://192.168.0.2:3000/api/genreList");
+            const response = await axios.get("http://192.168.56.1:3000/api/genreList");
             setGenreInput(response.data.genres);
         } catch (error) {
             console.log("Fail to fetch Genres", error);
@@ -48,6 +52,14 @@ function CreateBookScreen1({navigation}: {navigation: NavigationProp<ParamListBa
         getGenre();
     }, []);
 
+    useEffect(() => {
+      if(selectedGenre === null){
+        setErrorMessege(true);
+      }else{
+        setErrorMessege(false);
+      }
+    }, [selectedGenre])
+    
     return (
         <KeyboardAvoidingView style={[GlobalStyles.container]}>
             <ScrollView
@@ -95,6 +107,14 @@ function CreateBookScreen1({navigation}: {navigation: NavigationProp<ParamListBa
                         dropdownStyle={CreateBookStyles.dropDownMenuContainer}
                     />
                 </View>
+
+                {errorMessege? (
+                    <View style={GlobalStyles.content}>
+                        <Text style={GlobalStyles.lightText}>
+                            장르를 선택해주세요
+                        </Text>
+                    </View>
+                ): null}
                 
                 <View style={[
                     loginStyles.inputContainer,

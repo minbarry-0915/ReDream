@@ -52,6 +52,12 @@ const GlobalStyles = StyleSheet.create({
         color: 'black',
         letterSpacing: -0.8,
     },
+    lightText:{
+        fontFamily: 'Pretendard-Light',
+        fontSize: 15,
+        color: '#E93B3B',
+        letterSpacing: -0.8,
+    },
     iconContainer:{ 
         justifyContent: 'center',
         alignItems:'center',

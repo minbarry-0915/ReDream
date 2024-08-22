@@ -7,7 +7,7 @@ const useLogin = () => {
 
   const loginUser = async (id: string, password: string, onError: () => void) => {
     try {
-      const response = await axios.post('http://192.168.0.2:3000/api/user/login', {
+      const response = await axios.post('http://192.168.56.1:3000/api/user/login', {
         id: id,
         password: password,
       }, {

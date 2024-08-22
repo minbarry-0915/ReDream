@@ -12,6 +12,8 @@ import PlusIcon from "../assets/icons/plus.svg";
 // Components Functions
 import BookListContent from "../components/bookListContent";
 import useFetchBookList from '../function/useFetchBookList';
+import Loading from "../components/animations/loading";
+import AnimationStyles from "../styles/animationStyle";
 
 function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
     const booklist = useFetchBookList(); // Custom hook 사용
@@ -67,6 +69,8 @@ function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
                         ))}
                     </View>
                 </View>
+
+                <Loading style={AnimationStyles.loading}/>
             </ScrollView>
         </KeyboardAvoidingView>
     );

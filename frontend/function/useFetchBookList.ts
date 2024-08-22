@@ -21,7 +21,7 @@ const useFetchBookList = () => {
       if (!userId) return; // 로그인된 사용자 ID가 없으면 요청하지 않음
 
       try {
-        const response = await axios.get('http://192.168.0.2:3000/api/bookList', {
+        const response = await axios.get('http://192.168.56.1:3000/api/bookList', {
           params: {
             user_id: userId, // Redux에서 가져온 user ID 사용
           },

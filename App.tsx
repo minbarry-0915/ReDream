@@ -16,6 +16,8 @@ import BottomTabNavigator from "./frontend/components/bottomTabNavigator.tsx";
 import { CreateBookProvider } from "./frontend/contexts/createBookContext.tsx";
 import CreateBookScreen1 from "./frontend/screens/createBookScreen1.tsx";
 import CreateBookScreen2 from "./frontend/screens/createBookScreen2.tsx";
+import CreateBookScreen3 from "./frontend/screens/createBookScreen3.tsx";
+import CreateBookScreen4 from "./frontend/screens/createBookScreen4.tsx";
 
 
 
@@ -43,6 +45,8 @@ function CreateBookStackScreen(){
       <CreateBookStack.Navigator>
         <CreateBookStack.Screen name="CreateBook1" component={CreateBookScreen1} options={{headerShown: false}}/>
         <CreateBookStack.Screen name="CreateBook2" component={CreateBookScreen2} options={{headerShown: false}}/>
+        <CreateBookStack.Screen name="CreateBook3" component={CreateBookScreen3} options={{headerShown: false}}/>
+        <CreateBookStack.Screen name="CreateBook4" component={CreateBookScreen4} options={{headerShown: false}}/>
       </CreateBookStack.Navigator>
     </CreateBookProvider>
   )

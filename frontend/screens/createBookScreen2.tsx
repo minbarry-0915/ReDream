@@ -2,15 +2,12 @@ import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { NavigationProp, ParamListBase, RouteProp } from "@react-navigation/native";
 import axios from "axios";
-import SelectDropdown from "react-native-select-dropdown";
 
 import GlobalStyles from "../styles/globalStyle";
 import loginStyles from "../styles/loginScreenStyle";
-import SignUpStyles from "../styles/signUpScreenStyle";
 import CreateBookStyles from "../styles/createBookScreenStyle";
 
 import TopNavigator from "../components/topNavigator";
-import DropIcon from "../assets/icons/drop.svg";
 import { useCreateBook } from "../contexts/createBookContext";
 
 interface Keyword {
@@ -19,25 +16,41 @@ interface Keyword {
 }
 
 interface MyParams { 
-    genreId: number,
+    genreId: number;
 }
 
 function CreateBookScreen2({navigation, route}: {navigation: NavigationProp<ParamListBase>, route: RouteProp<ParamListBase>}) {
-    const {genreId} = route.params as MyParams;
- 
+    const { genreId } = route.params as MyParams;
+    
     const [keyWordsInput, setKeyWordsInput] = useState<Keyword[]>([]);
     const { bookData, setBookData } = useCreateBook();
+    const [selectedKeywordNames, setSelectedKeywordNames] = useState<string[]>([]); // 이름 기반으로 상태 관리
 
     const onNextButton = () => {
-
+        // bookData에 선택된 키워드 이름들을 저장
+        setBookData({
+            ...bookData,
+            keyword: selectedKeywordNames,
+        });
 
         console.log(bookData);
         navigation.navigate("CreateBook3");
     };
 
+    // 키워드를 선택하거나 선택 해제하는 함수
+    const toggleKeywordSelection = (keywordName: string) => {
+        if (selectedKeywordNames.includes(keywordName)) {
+            // 이미 선택된 키워드라면 배열에서 제거
+            setSelectedKeywordNames(selectedKeywordNames.filter(name => name !== keywordName));
+        } else {
+            // 선택되지 않은 키워드라면 배열에 추가
+            setSelectedKeywordNames([...selectedKeywordNames, keywordName]);
+        }
+    };
+
     const getGenre = async () => {
         try {
-            const response = await axios.get("http://192.168.0.2:3000/api/keywordList",{
+            const response = await axios.get(`http://192.168.56.1:3000/api/keywordList`,{
                 params:{
                     genre_id: genreId,
                 }
@@ -50,7 +63,6 @@ function CreateBookScreen2({navigation, route}: {navigation: NavigationProp<Para
     };
 
     useEffect(() => {
-        //console.log(genreId);
         getGenre();
         console.log(keyWordsInput);
     }, []);
@@ -73,8 +85,25 @@ function CreateBookScreen2({navigation, route}: {navigation: NavigationProp<Para
                     </Text>
                 </View>
                 
-                <View style={GlobalStyles.content}>
-                    
+                <View style={[GlobalStyles.content, { flexDirection: "row", flexWrap: 'wrap' }]}>
+                    {keyWordsInput.map((keyWord, index) => {
+                        const isSelected = selectedKeywordNames.includes(keyWord.keyword_name); // 선택된 키워드인지 확인
+                        return (
+                            <TouchableOpacity 
+                                activeOpacity={0.7}
+                                key={keyWord.keyword_id}
+                                style={[
+                                    CreateBookStyles.keyWordButton,
+                                    { backgroundColor: isSelected ? '#3B73E8' : '#EDEDED' }  // 선택된 경우 색상을 변경
+                                ]}
+                                onPress={() => toggleKeywordSelection(keyWord.keyword_name)} // 클릭 시 선택/해제
+                            >
+                                <Text style={[GlobalStyles.mediumText, { fontSize: 14, color: isSelected ? 'white' : 'black' }]}>
+                                    {keyWord.keyword_name}
+                                </Text>    
+                            </TouchableOpacity>
+                        ); 
+                    })}
                 </View>
                 
                 <View style={[

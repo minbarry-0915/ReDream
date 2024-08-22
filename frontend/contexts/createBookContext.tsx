@@ -7,7 +7,7 @@ interface BookData {
     user_id: string;
     title: string;
     genre: string;
-    keyword: string;
+    keyword: string[];
     description: string;
 }
 
@@ -18,7 +18,7 @@ interface CreateBookContextType {
 
 // Context 기본값 설정
 const defaultContextValue: CreateBookContextType = {
-    bookData: { user_id: '', title: '', genre: '', keyword: '', description: '' },
+    bookData: { user_id: '', title: '', genre: '', keyword: [], description: '' },
     setBookData: () => {}, // 기본값은 빈 함수
 };
 
