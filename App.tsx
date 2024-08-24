@@ -18,6 +18,8 @@ import CreateBookScreen1 from "./frontend/screens/createBookScreen1.tsx";
 import CreateBookScreen2 from "./frontend/screens/createBookScreen2.tsx";
 import CreateBookScreen3 from "./frontend/screens/createBookScreen3.tsx";
 import CreateBookScreen4 from "./frontend/screens/createBookScreen4.tsx";
+import CreateSuccessScreen from "./frontend/screens/createSuccessScreen.tsx";
+import CreateFailScreen from "./frontend/screens/createFailScreen.tsx";
 
 
 
@@ -47,6 +49,8 @@ function CreateBookStackScreen(){
         <CreateBookStack.Screen name="CreateBook2" component={CreateBookScreen2} options={{headerShown: false}}/>
         <CreateBookStack.Screen name="CreateBook3" component={CreateBookScreen3} options={{headerShown: false}}/>
         <CreateBookStack.Screen name="CreateBook4" component={CreateBookScreen4} options={{headerShown: false}}/>
+        <CreateBookStack.Screen name="CreateSuccess" component={CreateSuccessScreen} options={{headerShown: false}}/>
+        <CreateBookStack.Screen name="CreateFail" component={CreateFailScreen} options={{headerShown: false}}/>
       </CreateBookStack.Navigator>
     </CreateBookProvider>
   )

@@ -1,19 +1,18 @@
 import React from "react";
 import LottieView from "lottie-react-native";
-import GlobalStyles from "../../styles/globalStyle";
 import { View } from "react-native";
+import GlobalStyles from "../../styles/globalStyle";
 
-function Loading({style}){
+function Book({style}){
     return(
         <View style={[GlobalStyles.content,{alignItems: 'center'}]}>
             <LottieView 
             style={style}
-            source={require('../../assets/animations/loading.json')}
+            source={require('../../assets/animations/book.json')}
             autoPlay
             loop
-            />
+            />  
         </View>
-        
     );
 }
-export default Loading;
+export default Book;

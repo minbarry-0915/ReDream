@@ -29,7 +29,12 @@ function SignUpScreen2({navigation}:{navigation: NavigationProp<ParamListBase>})
                 }} 
             keyboardDismissMode='interactive'
             keyboardShouldPersistTaps="handled">
-                <TopNavigator navigation={navigation} title="회원가입"/>
+                <TopNavigator 
+                navigation={navigation} 
+                title="회원가입"
+                showBackButton={true}
+                showTitle={true}
+                />
 
 
                 <View style={GlobalStyles.content}>

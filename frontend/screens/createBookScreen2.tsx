@@ -26,16 +26,27 @@ function CreateBookScreen2({navigation, route}: {navigation: NavigationProp<Para
     const { bookData, setBookData } = useCreateBook();
     const [selectedKeywordNames, setSelectedKeywordNames] = useState<string[]>([]); // 이름 기반으로 상태 관리
 
-    const onNextButton = () => {
+    const onNextButton = async () => {
         // bookData에 선택된 키워드 이름들을 저장
-        setBookData({
-            ...bookData,
-            keyword: selectedKeywordNames,
-        });
+        setBookData(prevData => {
+            const updatedBookData = {
+                ...prevData,
+                keyword: selectedKeywordNames,
+            };
+            
+            // bookData가 업데이트된 후에 네비게이션을 실행
+            navigation.navigate("CreateBook3");
 
-        console.log(bookData);
-        navigation.navigate("CreateBook3");
+            return updatedBookData;
+        });
     };
+
+    useEffect(() => {
+        // 키워드가 업데이트된 후에 네비게이션을 처리
+        if (bookData.keyword.length > 0) {
+            console.log(bookData);
+        }
+    }, [bookData.keyword]);
 
     // 키워드를 선택하거나 선택 해제하는 함수
     const toggleKeywordSelection = (keywordName: string) => {
@@ -77,7 +88,12 @@ function CreateBookScreen2({navigation, route}: {navigation: NavigationProp<Para
                 keyboardDismissMode='interactive'
                 keyboardShouldPersistTaps="handled"
             >
-                <TopNavigator navigation={navigation} title="동화생성" />
+                <TopNavigator 
+                navigation={navigation} 
+                title="동화생성" 
+                showBackButton={true}
+                showTitle={true}
+                />
 
                 <View style={GlobalStyles.content}>
                     <Text style={[GlobalStyles.semiBoldText, { fontSize: 22 }]}>

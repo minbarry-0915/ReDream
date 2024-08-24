@@ -39,7 +39,7 @@ export const CreateBookProvider: React.FC<{ children: ReactNode }> = ({ children
     const [bookData, setBookData] = useState<BookData>({
         title: '',
         genre: '',
-        keyword: '',
+        keyword: [],
         description: '',
         user_id: userId, // user_id 초기값 설정
     });

@@ -22,7 +22,7 @@ function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
     const onCreateButton = () => {
         navigation.navigate("CreateBook");
     }
-
+    
     return (
         <KeyboardAvoidingView style={[GlobalStyles.container, { justifyContent: "flex-start", alignItems: 'center', backgroundColor: '#F0F0F0' }]}>
             <ScrollView
@@ -69,8 +69,6 @@ function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
                         ))}
                     </View>
                 </View>
-
-                <Loading style={AnimationStyles.loading}/>
             </ScrollView>
         </KeyboardAvoidingView>
     );

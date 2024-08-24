@@ -30,7 +30,7 @@ router.post('/book/create', async (req, res) => {
                     try {
                         console.log(`Processing paragraph ${index + 1} of ${paragraphs.length}`);
                         const audioUrl = await convertTextToSpeech(paragraph, title, index);
-                        const imageUrl = await createImages(paragraph, title);
+                        const imageUrl = await createImages(paragraph, title);  // null 반환 가능
 
                         results.push({ paragraph, imageUrl, audioUrl, index });
 
@@ -45,7 +45,7 @@ router.post('/book/create', async (req, res) => {
 
                 for (const result of sortedResults) {
                     await new Promise((resolve, reject) => {
-                        Paragraph.create(book_id, result.paragraph, result.imageUrl, result.audioUrl, (err) => {
+                        Paragraph.create(book_id, result.paragraph, result.imageUrl || null, result.audioUrl, (err) => {
                             if (err) reject(err);
                             else resolve();
                         });

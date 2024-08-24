@@ -20,9 +20,14 @@ function CreateBookScreen3({navigation}: {navigation: NavigationProp<ParamListBa
             ...prevData,
             description: descriptionInput,
         }));
-        console.log(bookData);
-        navigation.navigate("CreateBook4");
     };
+
+    useEffect(() => {
+        if (bookData.description) { // bookData.keyword가 업데이트되면
+            console.log(bookData);
+            navigation.navigate("CreateBook4");
+        }
+    }, [bookData.description, navigation]);
 
     const handleChangeDescription = (inputText: string) =>{
         setDescriptionInput(inputText);
@@ -46,7 +51,12 @@ function CreateBookScreen3({navigation}: {navigation: NavigationProp<ParamListBa
                 keyboardDismissMode='interactive'
                 keyboardShouldPersistTaps="handled"
             >
-                <TopNavigator navigation={navigation} title="동화생성" />
+                <TopNavigator 
+                navigation={navigation} 
+                title="동화생성" 
+                showBackButton={true}
+                showTitle={true}
+                />
 
                 <View style={GlobalStyles.content}>
                     <Text style={[GlobalStyles.semiBoldText, { fontSize: 22 }]}>

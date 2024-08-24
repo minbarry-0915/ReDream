@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { KeyboardAvoidingView, ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -6,20 +6,25 @@ import { RootState } from "../redux/store";
 
 import GlobalStyles from "../styles/globalStyle";
 import HomeScreenStyles from "../styles/homeScreenStyle";
-
 import useFetchBookList from "../function/useFetchBookList";
 import BookListContent from "../components/bookListContent";
-
 import EditIcon from '../assets/icons/edit.svg';
+import EditCompleteIcon from '../assets/icons/edit_complete.svg';
 
-function BookMarkScreen({navigation}: {navigation: NavigationProp<ParamListBase>}){
+function BookMarkScreen({navigation}:{navigation: NavigationProp<ParamListBase>}){
+    const [editMode, setEditMode] = useState<boolean>(false);
+
     const booklist = useFetchBookList(); // Custom hook 사용
-
     const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux state에서 user ID 가져오기
     
     const onBookListEdit = () =>{
-
+        setEditMode(true);
     };
+
+    const onBookListEditComplete = () =>{
+        setEditMode(false);
+    };
+
     return(
         <KeyboardAvoidingView style={[GlobalStyles.container, { justifyContent: "flex-start", alignItems: 'center', backgroundColor: '#F0F0F0' }]}>
             <ScrollView
@@ -35,14 +40,25 @@ function BookMarkScreen({navigation}: {navigation: NavigationProp<ParamListBase>
                 <View style={HomeScreenStyles.content}>
                     <View style={HomeScreenStyles.bookListHeaderContainer}>
                         <Text style={[GlobalStyles.semiBoldText, { fontSize: 18}]}>저장된 동화 목록</Text>
-                        <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={onBookListEdit}
-                        style={HomeScreenStyles.bookListEditButton}
-                        >
-                            <Text style={[GlobalStyles.mediumText, { fontSize: 18, color: '#3C3C3C', marginRight: 8}]}>편집</Text>
-                            <EditIcon width={14} height={14}/>
-                        </TouchableOpacity>
+                        {editMode ? (
+                           <TouchableOpacity
+                           activeOpacity={0.7}
+                           onPress={onBookListEditComplete}
+                           style={HomeScreenStyles.bookListEditButton}
+                           >
+                               <Text style={[GlobalStyles.mediumText, { fontSize: 18, color: '#E93B3B', marginRight: 8}]}>완료</Text>
+                               <EditCompleteIcon width={14} height={14}/>
+                           </TouchableOpacity> 
+                        ) : (
+                            <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={onBookListEdit}
+                            style={HomeScreenStyles.bookListEditButton}
+                            >
+                                <Text style={[GlobalStyles.mediumText, { fontSize: 18, color: '#3C3C3C', marginRight: 8}]}>편집</Text>
+                                <EditIcon width={14} height={14}/>
+                            </TouchableOpacity>
+                        )}
                     </View>
                     
                     <View style={HomeScreenStyles.bookListContainer}>
@@ -54,6 +70,7 @@ function BookMarkScreen({navigation}: {navigation: NavigationProp<ParamListBase>
                                 createAt={book.createAt}
                                 bookCoverUri={book.bookCoverUri}
                                 navigation={navigation}
+                                editMode={editMode} // editMode 상태를 전달
                             />
                         ))}
                     </View>
@@ -62,4 +79,5 @@ function BookMarkScreen({navigation}: {navigation: NavigationProp<ParamListBase>
         </KeyboardAvoidingView>
     );
 }
+
 export default BookMarkScreen;

@@ -31,13 +31,19 @@ function CreateBookScreen1({navigation}: {navigation: NavigationProp<ParamListBa
                 ...prevData,
                 genre: selectedGenre.genre_name // genre_id를 설정
             }));
-            console.log(bookData);
-            navigation.navigate("CreateBook2", {
-                genreId: selectedGenre.genre_id // genre_id를 파라미터로 넘기기
-            });
         }
         
     };
+
+    useEffect(() => {
+        if (bookData.genre) { // bookData.genre가 업데이트되면
+            console.log(bookData);
+            navigation.navigate("CreateBook2", {
+                genreId: selectedGenre?.genre_id // genre_id를 파라미터로 넘기기
+            });
+        }
+    }, [bookData.genre, selectedGenre, navigation]);
+
 
     const getGenre = async () => {
         try {
@@ -70,7 +76,12 @@ function CreateBookScreen1({navigation}: {navigation: NavigationProp<ParamListBa
                 keyboardDismissMode='interactive'
                 keyboardShouldPersistTaps="handled"
             >
-                <TopNavigator navigation={navigation} title="동화생성" />
+                <TopNavigator 
+                navigation={navigation} 
+                title="동화생성" 
+                showBackButton={true}
+                showTitle={true}
+                />
 
                 <View style={GlobalStyles.content}>
                     <Text style={[GlobalStyles.semiBoldText, { fontSize: 22 }]}>

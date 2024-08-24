@@ -1,25 +1,54 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
-
+import React, { useEffect, useRef } from "react";
+import { View, Text, Image, TouchableOpacity, Animated } from "react-native";
 import HomeScreenStyles from "../styles/homeScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
 import PlayIcon from "../assets/icons/play.svg";
+import DeleteIcon from "../assets/icons/delete.svg"; // 추가
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+
 // Props 타입 정의
 interface BookListContentProps {
   title: string;
   genre: string;
   createAt: string;
   bookCoverUri: string;
-  navigation: NavigationProp<ParamListBase>
+  navigation: NavigationProp<ParamListBase>;
+  editMode: boolean; // 추가
 }
 
 // 함수형 컴포넌트 정의
 function BookListContent(props: BookListContentProps) {
-  const { title, genre, createAt, bookCoverUri, navigation } = props;
-  const onPlayButton = () =>{
-    navigation.navigate('')
-  }
+  const { title, genre, createAt, bookCoverUri, navigation, editMode } = props;
+
+  const onButtonPress = () => {
+    if (editMode) {
+      // Edit mode에서의 행동
+      console.log('Edit mode action');
+      
+    } else {
+      // Play mode에서의 행동
+      //navigation.navigate('BookDetail'); // 예시로 BookDetail 화면으로 이동
+    }
+  };
+
+  // Animated 값 정의
+  const iconScale = useRef(new Animated.Value(1)).current;
+  const iconOpacity = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.timing(iconScale, {
+      toValue: editMode ? 1.1 : 1, // 확대/축소
+      duration: 300,
+      useNativeDriver: true
+    }).start();
+
+    Animated.timing(iconOpacity, {
+      toValue: editMode ? 0.7 : 1, // 불투명도
+      duration: 300,
+      useNativeDriver: true
+    }).start();
+  }, [editMode]);
+
   return (
     <View style={HomeScreenStyles.bookListContent}>
       <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
@@ -36,10 +65,19 @@ function BookListContent(props: BookListContentProps) {
         </View>
       </View>
       <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={onPlayButton}
+        activeOpacity={0.7}
+        onPress={onButtonPress}
       >
-        <PlayIcon width={32} height={32} />
+         <Animated.View style={{
+          transform: [{ scale: iconScale }],
+        }}>
+        {editMode ? (
+          <DeleteIcon width={32} height={32} /> // Edit mode에서 버튼 아이콘 변경
+        ) : (
+          <PlayIcon width={32} height={32} /> // Play mode에서 버튼 아이콘 유지
+        )}
+        </Animated.View>
+        
       </TouchableOpacity>
     </View>
   );
