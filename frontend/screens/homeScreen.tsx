@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store'; // RootState를 가져옵니다.
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { NavigationProp, ParamListBase, useFocusEffect } from "@react-navigation/native";
 // styles
 import HomeScreenStyles from "../styles/homeScreenStyle";
 import GlobalStyles from "../styles/globalStyle";
@@ -12,12 +12,19 @@ import PlusIcon from "../assets/icons/plus.svg";
 // Components Functions
 import BookListContent from "../components/bookListContent";
 import useFetchBookList from '../function/useFetchBookList';
-import Loading from "../components/animations/loading";
-import AnimationStyles from "../styles/animationStyle";
 
 function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
-    const booklist = useFetchBookList(); // Custom hook 사용
+    const [refreshFlag, setRefreshFlag] = useState<boolean>(false); // 리프레시 플래그
+
+    const {booklist} = useFetchBookList(refreshFlag); // Custom hook 사용
     const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux state에서 user ID 가져오기
+
+    // 화면이 다시 포커스될 때마다 refreshFlag를 업데이트하여 데이터를 새로고침합니다.
+    useFocusEffect(
+        useCallback(() => {
+            setRefreshFlag(prev => !prev); // 화면에 포커스될 때 refreshFlag를 토글합니다.
+        }, [])
+    );
 
     const onCreateButton = () => {
         navigation.navigate("CreateBook");
@@ -60,11 +67,13 @@ function HomeScreen({navigation}:{navigation: NavigationProp<ParamListBase>}) {
                         {booklist.map((book) => (
                             <BookListContent
                                 key={book.bookId}
+                                bookId={book.bookId}
                                 title={book.title}
                                 genre={book.genre}
                                 createAt={book.createAt}
                                 bookCoverUri={book.bookCoverUri}
                                 navigation={navigation}
+                                editMode={false}
                             />
                         ))}
                     </View>

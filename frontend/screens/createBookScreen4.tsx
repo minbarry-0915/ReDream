@@ -178,11 +178,11 @@ function CreateBookScreen4({navigation}:{navigation: NavigationProp<ParamListBas
                 transparent={false}
                 animationType="fade"
                 visible={modalVisible}
-                onRequestClose={()=>setModalVisible(false)}
+                onRequestClose={()=>null} //돌아가기 버튼 차단  
                 >
                     <View style={[GlobalStyles.container,{alignItems: 'center', justifyContent: 'center'}]}>
                         <Loading style={AnimationStyles.loading}/>
-                        <View style={[GlobalStyles.content,{alignItems: 'center'}]}>
+                        <View style={[GlobalStyles.content,{alignItems: 'center', marginTop: 36}]}>
                             <Animated.Text style={[GlobalStyles.semiBoldText, { fontSize: 24, opacity: fadeAnim }]}>{text}</Animated.Text>
                             <Animated.Text style={[GlobalStyles.semiBoldText, { fontSize: 24, opacity: fadeAnim }]}>잠시만 기다려주세요</Animated.Text>
                         </View>

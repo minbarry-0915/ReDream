@@ -12,19 +12,17 @@ export interface BookProp {
     bookCoverUri: string;
 }
 
-const useFetchBookList = () => {
+const useFetchBookList = (refreshFlag: boolean) => {
   const [booklist, setBookList] = useState<BookProp[]>([]);
-  const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux에서 user ID 가져오기
+  const userId = useSelector((state: RootState) => state.auth.user?.id);
 
   useEffect(() => {
     const fetchBookList = async () => {
-      if (!userId) return; // 로그인된 사용자 ID가 없으면 요청하지 않음
+      if (!userId) return;
 
       try {
         const response = await axios.get('http://192.168.56.1:3000/api/bookList', {
-          params: {
-            user_id: userId, // Redux에서 가져온 user ID 사용
-          },
+          params: { user_id: userId },
         });
 
         if (response.data && Array.isArray(response.data.books)) {
@@ -35,7 +33,6 @@ const useFetchBookList = () => {
             createAt: new Date(item.create_at).toISOString().split('T')[0],
             bookCoverUri: item.cover_image_path,
           }));
-
           setBookList(books);
         } else {
           console.error('Response data.books is not an array:', response.data);
@@ -46,9 +43,10 @@ const useFetchBookList = () => {
     };
 
     fetchBookList();
-  }, [userId]); // userId가 변경될 때마다 fetchBookList 실행
+  }, [userId, refreshFlag]);
 
-  return booklist;
+  // booklist와 setBookList 둘 다 반환
+  return { booklist, setBookList };
 };
 
 export default useFetchBookList;

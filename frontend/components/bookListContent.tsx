@@ -8,23 +8,26 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
 // Props 타입 정의
 interface BookListContentProps {
+  bookId: number;
   title: string;
   genre: string;
   createAt: string;
   bookCoverUri: string;
   navigation: NavigationProp<ParamListBase>;
-  editMode: boolean; // 추가
+  editMode: boolean;
+  onDelete?: (bookId: number) => void;
 }
 
 // 함수형 컴포넌트 정의
 function BookListContent(props: BookListContentProps) {
-  const { title, genre, createAt, bookCoverUri, navigation, editMode } = props;
+  const { bookId, title, genre, createAt, bookCoverUri, navigation, editMode, onDelete } = props;
 
   const onButtonPress = () => {
     if (editMode) {
       // Edit mode에서의 행동
-      console.log('Edit mode action');
-      
+      if (onDelete) {
+        onDelete(bookId); // 부모 컴포넌트에 삭제 요청
+      }
     } else {
       // Play mode에서의 행동
       //navigation.navigate('BookDetail'); // 예시로 BookDetail 화면으로 이동
@@ -77,7 +80,6 @@ function BookListContent(props: BookListContentProps) {
           <PlayIcon width={32} height={32} /> // Play mode에서 버튼 아이콘 유지
         )}
         </Animated.View>
-        
       </TouchableOpacity>
     </View>
   );

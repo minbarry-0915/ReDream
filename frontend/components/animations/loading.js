@@ -5,7 +5,7 @@ import { View } from "react-native";
 
 function Loading({style}){
     return(
-        <View style={[GlobalStyles.content,{alignItems: 'center'}]}>
+        <View style={[GlobalStyles.content,{alignItems: 'center', marginBottom: 0}]}>
             <LottieView 
             style={style}
             source={require('../../assets/animations/loading.json')}
