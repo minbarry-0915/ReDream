@@ -10,6 +10,7 @@ import { useCreateBook } from "../contexts/createBookContext";
 import Loading from "../components/animations/loading";
 import AnimationStyles from "../styles/animationStyle";
 import useCreateBookServerRequest from "../function/useCreateBook";
+import LoadingModal from "../components/loadingModal";
 
 function CreateBookScreen4({navigation}:{navigation: NavigationProp<ParamListBase>}){
     const { bookData, setBookData } = useCreateBook();
@@ -174,7 +175,7 @@ function CreateBookScreen4({navigation}:{navigation: NavigationProp<ParamListBas
                     </TouchableOpacity>
                 </View>
 
-                <Modal 
+                {/* <Modal 
                 transparent={false}
                 animationType="fade"
                 visible={modalVisible}
@@ -187,7 +188,14 @@ function CreateBookScreen4({navigation}:{navigation: NavigationProp<ParamListBas
                             <Animated.Text style={[GlobalStyles.semiBoldText, { fontSize: 24, opacity: fadeAnim }]}>잠시만 기다려주세요</Animated.Text>
                         </View>
                     </View>
-                </Modal>
+                </Modal> */}
+
+                <LoadingModal
+                    version="createBook"
+                    navigation={navigation}
+                    modalVisible={modalVisible}
+                    initialText="그림을 만들고 있어요"
+                />
             </ScrollView>   
         </KeyboardAvoidingView>
     )

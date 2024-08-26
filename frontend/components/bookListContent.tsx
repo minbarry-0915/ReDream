@@ -30,7 +30,8 @@ function BookListContent(props: BookListContentProps) {
       }
     } else {
       // Play mode에서의 행동
-      //navigation.navigate('BookDetail'); // 예시로 BookDetail 화면으로 이동
+      console.log('View bookId', bookId);
+      navigation.navigate('ViewBook',{Id: bookId}); // 예시로 BookDetail 화면으로 이동
     }
   };
 

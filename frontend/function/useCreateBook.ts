@@ -3,6 +3,8 @@ import { RootState } from "../redux/store";
 import { useCreateBook } from "../contexts/createBookContext";
 import { useCallback } from "react";
 import axios from "axios";
+import { REACT_NATIVE_BACKEND_IP} from '@env';
+
 
 const useCreateBookServerRequest = (onError: () => void, onSuccess: () => void) => {
     const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux에서 user ID 가져오기
@@ -12,7 +14,7 @@ const useCreateBookServerRequest = (onError: () => void, onSuccess: () => void) 
         if (!userId) return;
         
         try {
-            const response = await axios.post('http://192.168.56.1:3000/api/book/create', {
+            const response = await axios.post(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/book/create`, {
                 user_id: userId,
                 title: bookData.title,
                 genre: bookData.genre,

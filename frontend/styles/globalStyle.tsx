@@ -120,6 +120,10 @@ const GlobalStyles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 12,
     },
+    startIcon:{
+        width: 50,
+        height: 50,
+    }
 })
 
 export default GlobalStyles;

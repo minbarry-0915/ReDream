@@ -16,6 +16,9 @@ function CreateBookScreen3({navigation}: {navigation: NavigationProp<ParamListBa
     const [errorMessege, setErrorMessege] = useState(false);
 
     const onNextButton = () => {
+        if(descriptionInput === ''){
+            navigation.navigate("CreateBook4");
+        }
         setBookData(prevData => ({
             ...prevData,
             description: descriptionInput,

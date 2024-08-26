@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { REACT_NATIVE_BACKEND_IP} from '@env';
 
 function useDeleteBook(){
 
@@ -12,7 +13,7 @@ function useDeleteBook(){
         
         try {
             console.log('Deleting the book... :', bookId);
-            await axios.delete(`http://192.168.56.1:3000/api/book`, {
+            await axios.delete(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/book`, {
                 params: {
                 book_id: bookId, // 쿼리 파라미터로 book_id 전달
             },

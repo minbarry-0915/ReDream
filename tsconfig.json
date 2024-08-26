@@ -2,6 +2,7 @@
   "extends": "@react-native/typescript-config/tsconfig.json",
   "include": [
     "src/**/*",
-    "declarations.d.ts" // 또는 svg.d.ts
+    "declarations.d.ts", // 또는 svg.d.ts
+    "env.d.ts"  // 여기에 추가합니다.
   ]
 }

@@ -4,6 +4,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
 import BackIcon from "../assets/icons/back.svg";
 import GlobalStyles from "../styles/globalStyle";
+import ViewBookStyles from "../styles/viewBookScreenStyle";
 interface Prop {
     navigation: NavigationProp<ParamListBase>;
     title?: string;
@@ -19,7 +20,7 @@ function TopNavigator({ navigation, title,  showBackButton = false, showTitle = 
     };
 
     return (
-        <View style={GlobalStyles.topNavigatorContainer}>
+        <View style={[GlobalStyles.topNavigatorContainer]}>
             {showBackButton && (
                 <TouchableOpacity 
                 onPress={onBackButton}
