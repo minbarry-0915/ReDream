@@ -76,4 +76,4 @@ yarn-error.log
 
 # ENV
 backend/.env
-./.env
+.env
