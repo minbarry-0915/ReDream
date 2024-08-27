@@ -14,8 +14,6 @@ function NextButton({props}:{props: NextButtonProps}){
     const {navigation, destination} = props;
 
     const onNextButton = () =>{
-        //console.log('signup1: ', nameInput);
-        //setUserData(prevData => ({...prevData, name: nameInput}))
         navigation.navigate("SignUp2");
     };
     

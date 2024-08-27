@@ -24,6 +24,12 @@ const ViewBookStyles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    linearGradient:{
+        width: screenWidth,
+        height: screenHeight,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
     }
 
 });

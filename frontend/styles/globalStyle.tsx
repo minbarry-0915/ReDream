@@ -65,6 +65,7 @@ const GlobalStyles = StyleSheet.create({
     topNavigatorContainer:{
         width: '100%',
         flexDirection: 'row',
+        justifyContent: 'space-between',
         paddingHorizontal: 24,
         paddingBottom: 24,
         paddingTop: 60,
@@ -123,7 +124,8 @@ const GlobalStyles = StyleSheet.create({
     startIcon:{
         width: 50,
         height: 50,
-    }
+    },
+
 })
 
 export default GlobalStyles;

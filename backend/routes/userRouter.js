@@ -10,6 +10,20 @@ dotenv.config();
 const secretKey = process.env.JWT_SECRET_KEY;
 const router = express.Router();
 
+// Middleware to check for JWT token
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401); // Token not found
+
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) return res.sendStatus(403); // Token invalid or expired
+        req.user = user;
+        next();
+    });
+};
+
 router.post('/user/register', (req, res) => {
     const { id, username, password, birthdate } = req.body;
 
@@ -70,7 +84,7 @@ router.post('/user/login', (req, res) => {
     });
 });
 
-router.delete('/user/delete/:id', async (req, res) => {
+router.delete('/user/delete/:id',authenticateToken, async (req, res) => {
     const { id } = req.params;
 
     if (!id) {
