@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/authSlice';
+import { REACT_NATIVE_BACKEND_IP} from '@env';
 
 const useLogin = () => {
   const dispatch = useDispatch();
 
   const loginUser = async (id: string, password: string, onError: () => void) => {
     try {
-      const response = await axios.post('http://192.168.56.1:3000/api/user/login', {
+      const response = await axios.post(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/user/login`, {
         id: id,
         password: password,
       }, {

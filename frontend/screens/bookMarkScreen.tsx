@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Modal, Text, TouchableOpacity, View, KeyboardAvoidingView, ScrollView } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { useSelector } from 'react-redux';
-import { RootState } from "../redux/store";
 import GlobalStyles from "../styles/globalStyle";
 import HomeScreenStyles from "../styles/homeScreenStyle";
+import AnimationStyles from "../styles/animationStyle";
+
 import useFetchBookList from '../function/useFetchBookList';
 import useDeleteBook from "../function/useDeleteBook";
+
 import BookListContent from "../components/bookListContent";
 import EditIcon from '../assets/icons/edit.svg';
 import EditCompleteIcon from '../assets/icons/edit_complete.svg';
 import Loading from "../components/animations/loading";
-import AnimationStyles from "../styles/animationStyle";
+
 
 function BookMarkScreen({ navigation }: { navigation: NavigationProp<ParamListBase> }) {
     const [editMode, setEditMode] = useState<boolean>(false);
@@ -21,8 +22,7 @@ function BookMarkScreen({ navigation }: { navigation: NavigationProp<ParamListBa
 
     const { booklist, setBookList } = useFetchBookList(refreshFlag); // Custom hook 사용
     const { deleteBook, loading } = useDeleteBook(); // Custom hook 사용
-    const userId = useSelector((state: RootState) => state.auth.user?.id); // Redux state에서 user ID 가져오기
-    
+
     const sampleloading = true;
 
     const onBookListEdit = () => {

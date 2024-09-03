@@ -12,7 +12,7 @@ import SignUpStyles from "../styles/signUpScreenStyle";
 import TopNavigator from "../components/topNavigator";
 import DropIcon from "../assets/icons/drop.svg";
 import { useCreateBook } from "../contexts/createBookContext";
-
+import { REACT_NATIVE_BACKEND_IP } from '@env';
 
 interface Genre {
     genre_id: number;
@@ -47,7 +47,7 @@ function CreateBookScreen1({navigation}: {navigation: NavigationProp<ParamListBa
 
     const getGenre = async () => {
         try {
-            const response = await axios.get("http://192.168.56.1:3000/api/genreList");
+            const response = await axios.get(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/genreList`);
             setGenreInput(response.data.genres);
         } catch (error) {
             console.log("Fail to fetch Genres", error);

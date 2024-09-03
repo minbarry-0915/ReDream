@@ -9,6 +9,7 @@ import CreateBookStyles from "../styles/createBookScreenStyle";
 
 import TopNavigator from "../components/topNavigator";
 import { useCreateBook } from "../contexts/createBookContext";
+import {REACT_NATIVE_BACKEND_IP} from '@env';
 
 interface Keyword {
     keyword_id: number;
@@ -61,7 +62,7 @@ function CreateBookScreen2({navigation, route}: {navigation: NavigationProp<Para
 
     const getGenre = async () => {
         try {
-            const response = await axios.get(`http://192.168.56.1:3000/api/keywordList`,{
+            const response = await axios.get(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/keywordList`,{
                 params:{
                     genre_id: genreId,
                 }

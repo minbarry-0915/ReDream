@@ -20,6 +20,7 @@ import CreateBookScreen3 from "./frontend/screens/createBookScreen3.tsx";
 import CreateBookScreen4 from "./frontend/screens/createBookScreen4.tsx";
 import CreateSuccessScreen from "./frontend/screens/createSuccessScreen.tsx";
 import CreateFailScreen from "./frontend/screens/createFailScreen.tsx";
+import ViewBookScreen from "./frontend/screens/viewBookScreen.tsx";
 
 
 
@@ -65,6 +66,7 @@ function App() {
           <RootStack.Screen name="SignUp" component={SignUpStackScreen} options={{ headerShown: false }} />
           <RootStack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false , animation: 'fade'}} />
           <RootStack.Screen name="CreateBook" component={CreateBookStackScreen} options={{headerShown: false}}/>
+          <RootStack.Screen name="ViewBook" component={ViewBookScreen}  options={{headerShown: false}}/>
         </RootStack.Navigator>
       </NavigationContainer>
     </Provider>

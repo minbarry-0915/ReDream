@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store'; // Redux store의 RootState 타입 임포트
+import { REACT_NATIVE_BACKEND_IP} from '@env';
 
 // Define BookProp interface
 export interface BookProp {
@@ -21,7 +22,7 @@ const useFetchBookList = (refreshFlag: boolean) => {
       if (!userId) return;
 
       try {
-        const response = await axios.get('http://192.168.56.1:3000/api/bookList', {
+        const response = await axios.get(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/bookList`, {
           params: { user_id: userId },
         });
 
