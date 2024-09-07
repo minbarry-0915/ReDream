@@ -61,7 +61,7 @@ function MyPageScreen({ navigation }: { navigation: NavigationProp<ParamListBase
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 style={{ flexGrow: 1, width: "100%" }}
-                scrollEnabled={false}
+                scrollEnabled={false} 
             >
                 {/* 마이페이지 */}
                 <View style={GlobalStyles.topNavigatorContainer}>
