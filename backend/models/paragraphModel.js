@@ -6,8 +6,8 @@ const Paragraph = {
     const query = `
       INSERT INTO paragraph (book_id, text, image_path, audio_path)
       VALUES (?, ?, ?, ?)`;
-  
-      connection.query(query, [book_id, text, image_path, audio_path], (err) => {
+
+    connection.query(query, [book_id, text, image_path, audio_path], err => {
       if (err) return callback(err);
       callback(null);
     });
@@ -18,10 +18,10 @@ const Paragraph = {
         SELECT audio_path, image_path 
         FROM paragraph 
         WHERE book_id = ?`;
-    
+
     connection.query(query, [book_id], (err, results) => {
-        if (err) return callback(err);
-        callback(null, results);
+      if (err) return callback(err);
+      callback(null, results);
     });
   },
 
@@ -33,7 +33,6 @@ const Paragraph = {
       callback(null, results);
     });
   },
-
-}
+};
 
 export default Paragraph; // Default export

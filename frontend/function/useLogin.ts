@@ -1,26 +1,34 @@
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { login } from '../redux/authSlice';
-import { REACT_NATIVE_BACKEND_IP} from '@env';
+import {useDispatch} from 'react-redux';
+import {login} from '../redux/authSlice';
+import {REACT_NATIVE_BACKEND_IP} from '@env';
 
 const useLogin = () => {
   const dispatch = useDispatch();
 
-  const loginUser = async (id: string, password: string, onError: () => void) => {
+  const loginUser = async (
+    id: string,
+    password: string,
+    onError: () => void,
+  ) => {
     try {
-      const response = await axios.post(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/user/login`, {
-        id: id,
-        password: password,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.post(
+        `http://${REACT_NATIVE_BACKEND_IP}:3000/api/user/login`,
+        {
+          id: id,
+          password: password,
         },
-        validateStatus: (status) => status < 500,
-      });
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          validateStatus: status => status < 500,
+        },
+      );
 
       if (response.status === 200) {
-        const { user, token } = response.data;
-        dispatch(login({ user, token }));
+        const {user, token} = response.data;
+        dispatch(login({user, token}));
         return true;
       } else if (response.status === 401) {
         onError(); // 실패 시 콜백 호출

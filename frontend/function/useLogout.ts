@@ -1,8 +1,8 @@
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logout } from '../redux/authSlice';
+import {logout} from '../redux/authSlice';
 
-function useLogout(){
+function useLogout() {
   const dispatch = useDispatch();
 
   const logoutUser = async () => {
@@ -20,6 +20,6 @@ function useLogout(){
   };
 
   return logoutUser;
-};
+}
 
 export default useLogout;

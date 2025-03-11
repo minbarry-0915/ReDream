@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store'; // Redux store의 RootState 타입 임포트
-import { REACT_NATIVE_BACKEND_IP} from '@env';
+import {useSelector} from 'react-redux';
+import {RootState} from '../redux/store'; // Redux store의 RootState 타입 임포트
+import {REACT_NATIVE_BACKEND_IP} from '@env';
 
 // Define BookProp interface
 export interface BookProp {
-    bookId: number;
-    title: string;
-    genre: string;
-    createAt: string;
-    bookCoverUri: string;
+  bookId: number;
+  title: string;
+  genre: string;
+  createAt: string;
+  bookCoverUri: string;
 }
 
 const useFetchBookList = (refreshFlag: boolean) => {
@@ -19,12 +19,17 @@ const useFetchBookList = (refreshFlag: boolean) => {
 
   useEffect(() => {
     const fetchBookList = async () => {
-      if (!userId) return;
+      if (!userId) {
+        return;
+      }
 
       try {
-        const response = await axios.get(`http://${REACT_NATIVE_BACKEND_IP}:3000/api/bookList`, {
-          params: { user_id: userId },
-        });
+        const response = await axios.get(
+          `http://${REACT_NATIVE_BACKEND_IP}:3000/api/bookList`,
+          {
+            params: {user_id: userId},
+          },
+        );
 
         if (response.data && Array.isArray(response.data.books)) {
           const books: BookProp[] = response.data.books.map((item: any) => ({
@@ -47,7 +52,7 @@ const useFetchBookList = (refreshFlag: boolean) => {
   }, [userId, refreshFlag]);
 
   // booklist와 setBookList 둘 다 반환
-  return { booklist, setBookList };
+  return {booklist, setBookList};
 };
 
 export default useFetchBookList;
