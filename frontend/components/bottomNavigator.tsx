@@ -6,6 +6,7 @@ import GlobalStyles from "../styles/globalStyle";
 import HomeIcon from "../assets/icons/home.svg";
 import BookMarkIcon from "../assets/icons/bookmark.svg";
 import UserIcon from "../assets/icons/user.svg";
+// deceperated
 
 // Props 타입 정의
 interface BottomNavigatorProps {
